@@ -1,4 +1,5 @@
-name: Deploy Lovable Project (Quant)
+name: Validate Blueprint (Quant)
+
 on:
   push:
     branches: [ main ]
@@ -6,28 +7,31 @@ on:
       - dynasty_quant_systems.json
       - .github/workflows/lovable-deploy.yml
   workflow_dispatch:
+
 concurrency:
-  group: lovable-deploy-quant
+  group: validate-quant
   cancel-in-progress: true
+
 permissions:
   contents: read
+
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Verify blueprint
+
+      - name: Verify blueprint exists
         run: test -f dynasty_quant_systems.json
-      - name: Install Lovable CLI
-        run: npm install -g next-lovable
-      - name: Deploy to Lovable (no API key required)
+
+      - name: Validate JSON (jq)
         run: |
-          set -euo pipefail
-          next-lovable --version
-          next-lovable deploy --blueprint ./dynasty_quant_systems.json | tee deploy.log
-      - name: Upload deploy log artifact
+          sudo apt-get update && sudo apt-get install -y jq
+          jq . dynasty_quant_systems.json > /dev/null
+
+      - name: Archive blueprint
         uses: actions/upload-artifact@v4
         with:
-          name: lovable-deploy-quant-log
-          path: deploy.log
+          name: quant-blueprint
+          path: dynasty_quant_systems.json

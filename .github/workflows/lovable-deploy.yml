@@ -1,12 +1,44 @@
-# Placeholder workflow file
-name: Lovable Deploy
+name: Deploy Lovable Project (Quant)
 
 on:
+  push:
+    branches: [ main ]
+    paths:
+      - dynasty_quant_systems.json
+      - .github/workflows/lovable-deploy.yml
   workflow_dispatch:
 
+concurrency:
+  group: lovable-deploy-quant
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
-  placeholder:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Placeholder step
-        run: echo 'Placeholder workflow'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify blueprint file exists
+        run: |
+          test -f dynasty_quant_systems.json || (echo "Missing dynasty_quant_systems.json" && exit 1)
+
+      - name: Install Lovable CLI
+        run: npm i -g @lovable/cli
+
+      - name: Deploy to Lovable
+        env:
+          LOVABLE_API_KEY: ${{ secrets.LOVABLE_API_KEY }}
+        run: |
+          set -euo pipefail
+          lovable --version
+          lovable deploy --blueprint ./dynasty_quant_systems.json | tee deploy.log
+
+      - name: Upload deploy log artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lovable-deploy-quant-log
+          path: deploy.log

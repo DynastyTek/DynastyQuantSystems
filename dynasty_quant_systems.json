@@ -1,1 +1,17 @@
-[REDACTED]
+{
+  "project": "Dynasty Quant Systems",
+  "description": "AI-driven quantitative trading platform with automated reporting and Stripe test billing.",
+  "theme": {
+    "palette": { "primary": "#D4AF37", "secondary": "#0A0A0A", "accent": "#FFFFFF" },
+    "typography": { "heading": "Inter", "body": "Inter" }
+  },
+  "frontend": { "framework": "Next.js", "ui": "Tailwind", "pages": ["Home", "Pricing", "Dashboard", "CheckoutSuccess"] },
+  "integrations": { "stripe": { "mode": "test", "plans": ["quant_starter", "quant_pro"] } },
+  "automations": {
+    "daily_trading_report": {
+      "schedule": "0 18 * * *",
+      "actions": ["aggregate_trades", "render_pdf", "store", "notify_users"]
+    }
+  },
+  "webhooks": { "stripe": ["invoice.paid", "invoice.upcoming", "customer.subscription.created"] }
+}

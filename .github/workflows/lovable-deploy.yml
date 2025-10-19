@@ -22,16 +22,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify blueprint file exists
-        run: |
-          test -f dynasty_quant_systems.json || (echo "Missing dynasty_quant_systems.json" && exit 1)
+      - name: Verify blueprint
+        run: test -f dynasty_quant_systems.json
 
       - name: Install Lovable CLI
         run: npm i -g @lovable/cli
 
-      - name: Deploy to Lovable
-        env:
-          LOVABLE_API_KEY: ${{ secrets.LOVABLE_API_KEY }}
+      - name: Deploy to Lovable (no API key required)
         run: |
           set -euo pipefail
           lovable --version

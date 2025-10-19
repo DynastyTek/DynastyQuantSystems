@@ -1,0 +1,12 @@
+# Placeholder workflow file
+name: Lovable Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder step
+        run: echo 'Placeholder workflow'

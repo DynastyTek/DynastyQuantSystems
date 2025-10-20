@@ -19,7 +19,7 @@ export default function Pricing() {
         <h3>Quant Pro</h3>
         <p>Scale alpha with pro telemetry.</p>
         <CheckoutButton
-          priceId="price_live_quant_pro"       // TODO: replace with your real live Price ID
+          priceId="price_live_quant_pro"      // TODO: replace with your real live Price ID
           brand="quant"
           apiBase={API_BASE}
         />
